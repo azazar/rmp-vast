@@ -97,7 +97,7 @@ When serving ads from Google Ads network (DFP, ADX, AdSense for Video) you must 
 [Back to documentation sections](#documentation-sections)
 
 ## Quick start guide
-First download latest rmp-vast package from the [release tab](https://github.com/radiantmediaplayer/rmp-vast/releases).
+First download latest rmp-vast package from the [release tab](https://github.com/azazar/rmp-vast/releases).
 
 You must use rmp-vast in a well-formed HTML document. This means a web-page with a valid HTML5 DOCTYPE and other elements that are commonly available in today's web. See app/index.html for an example.
 
@@ -423,7 +423,7 @@ Please review `scripts.preinstall` in `package.json` to make sure our preinstall
 
 To develop rmp-vast do install it (you need to have node.js installed globally):
 
-`git clone https://github.com/radiantmediaplayer/rmp-vast.git`
+`git clone https://github.com/azazar/rmp-vast.git`
 
 `npm install`
 

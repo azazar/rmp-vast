@@ -5,7 +5,7 @@
   "description": "A client-side JavaScript solution to load, parse and display VAST resources (advertising)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/radiantmediaplayer/rmp-vast.git"
+    "url": "git+https://github.com/azazar/rmp-vast.git"
   },
   "main": "js/dist/rmp-vast.min.js",
   "keywords": [
@@ -18,7 +18,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/radiantmediaplayer/rmp-vast/issues"
+    "url": "https://github.com/azazar/rmp-vast/issues"
   },
   "homepage": "https://www.radiantmediaplayer.com/rmp-vast/app/",
   "scripts": {
