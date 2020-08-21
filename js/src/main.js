@@ -414,11 +414,26 @@ import ICONS from './creatives/icons';
     _parseCreatives.call(this, creative);
   };
 
-  const _onXmlAvailable = function (xml) {
+  const _loadError = function(errorCode, _makeAjaxRequest) {
+    if (Array.isArray(this.fallbackAdTagUrls) && this.fallbackAdTagUrls.length > 0) {
+      if (DEBUG) {
+        FW.log('switching to fallback url');
+      }
+      _makeAjaxRequest.call(this, this.fallbackAdTagUrls);
+    }
+    else {
+      if (DEBUG) {
+        FW.log('failed');
+      }
+      VASTERRORS.process.call(this, errorCode);
+    }
+  };
+
+  const _onXmlAvailable = function (xml, _makeAjaxRequest) {
     // if VMAP we abort
     const vmap = xml.getElementsByTagName('vmap:VMAP');
     if (vmap.length > 0) {
-      VASTERRORS.process.call(this, 200);
+      _loadError.call(this, 200, _makeAjaxRequest);
       return;
     }
     // check for VAST node
@@ -426,7 +441,7 @@ import ICONS from './creatives/icons';
     if (vastTag.length === 0) {
       // in case this is a wrapper we need to ping for errors on originating tags
       PING.error.call(this, 100);
-      VASTERRORS.process.call(this, 100);
+      _loadError.call(this, 100, _makeAjaxRequest);
       return;
     }
     const vastDocument = vastTag[0];
@@ -454,14 +469,14 @@ import ICONS from './creatives/icons';
     if (!pattern.test(version)) {
       // in case this is a wrapper we need to ping for errors on originating tags
       PING.error.call(this, 102);
-      VASTERRORS.process.call(this, 102);
+      _loadError.call(this, 102, _makeAjaxRequest);
       return;
     }
     // if empty VAST return
     const ad = vastDocument.getElementsByTagName('Ad');
     if (ad.length === 0) {
       PING.error.call(this, 303);
-      VASTERRORS.process.call(this, 303);
+      _loadError.call(this, 303, _makeAjaxRequest);
       return;
     }
     _filterAdPod.call(this, ad);
@@ -470,6 +485,13 @@ import ICONS from './creatives/icons';
   const _makeAjaxRequest = function (vastUrl) {
     // we check for required VAST URL and API here
     // as we need to have this.currentContentSrc available for iOS
+    if (Array.isArray(vastUrl)) {
+      this.fallbackAdTagUrls = vastUrl.splice(1);
+      vastUrl = vastUrl[0];
+    }
+    else {
+      this.fallbackAdTagUrls = null;
+    }
     if (typeof vastUrl !== 'string' || vastUrl === '') {
       VASTERRORS.process.call(this, 1001);
       return;
@@ -485,6 +507,7 @@ import ICONS from './creatives/icons';
     if (DEBUG) {
       FW.log('try to load VAST tag at ' + this.adTagUrl);
     }
+    
     FW.ajax(this.adTagUrl, this.params.ajaxTimeout, true, this.params.ajaxWithCredentials).then((data) => {
       if (DEBUG) {
         FW.log('VAST loaded from ' + this.adTagUrl);
@@ -503,7 +526,7 @@ import ICONS from './creatives/icons';
         FW.trace(e);
         // in case this is a wrapper we need to ping for errors on originating tags
         PING.error.call(this, 100);
-        VASTERRORS.process.call(this, 100);
+        _loadError.call(this, 100, _makeAjaxRequest);
         return;
       }
       _onXmlAvailable.call(this, xml);
@@ -511,7 +534,7 @@ import ICONS from './creatives/icons';
       FW.trace(e);
       // in case this is a wrapper we need to ping for errors on originating tags
       PING.error.call(this, 1000);
-      VASTERRORS.process.call(this, 1000);
+      _loadError.call(this, 1000, _makeAjaxRequest);
     });
   };
 

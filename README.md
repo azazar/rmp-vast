@@ -115,7 +115,10 @@ This structure must not be altered. CSS classes on the above elements must not b
 The HTML5 video tag used for content must use the src property on the HTML5 video (e.g. do not use source tag).
 - Init rmp-vast with JavaScript:
 ```javascript
-var adTag = 'https://www.radiantmediaplayer.com/vast/tags/inline-linear-1.xml';
+var adTag = [
+  'https://www.radiantmediaplayer.com/vast/tags/inline-linear-1.xml',
+  'https://example.org/fallback.xml'
+];
 var id = 'rmpPlayer';
 var params = {
   ajaxTimeout: 8000

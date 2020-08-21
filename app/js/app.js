@@ -10,7 +10,10 @@
   var playerWidth = 640;
   var playerHeight = 360;
   // the default adTag when none is provided
-  var adTag = 'https://www.radiantmediaplayer.com/vast/tags/inline-linear.xml';
+  var adTag = [
+    'data:text/plain,NOT A VAST (error)',
+    'https://www.radiantmediaplayer.com/vast/tags/inline-linear.xml'
+  ];
 
   /*** start of fullscreen management logic ***/
   /* yes HTML5 video fullscreen is probably not as easy as it sounds */
