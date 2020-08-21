@@ -27,3 +27,8 @@ nbproject/
 
 # VSC
 .vscode
+
+# compiled stuff
+js/src/module.js
+app/js/dist/rmp-vast.*
+app/css/rmp-vast.*
