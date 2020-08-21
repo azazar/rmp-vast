@@ -14,6 +14,7 @@ HELPERS.filterParams = function (inputParams) {
     pauseOnClick: true,
     skipMessage: 'Skip ad',
     skipWaitingMessage: 'Skip ad in',
+    skipOverride: 0,
     textForClickUIOnMobile: 'Learn more',
     enableVpaid: true,
     outstream: false,

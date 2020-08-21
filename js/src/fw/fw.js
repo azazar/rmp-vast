@@ -335,7 +335,10 @@ FW.isValidOffset = function (offset) {
 
 FW.convertOffsetToSeconds = function (offset, duration) {
   let seconds = 0;
-  if (skipPattern1.test(offset)) {
+  if (typeof offset === 'number') {
+    seconds = offset;
+  }
+  else if (skipPattern1.test(offset)) {
     // remove .mmm
     let splitNoMS = offset.split('.');
     splitNoMS = splitNoMS[0];

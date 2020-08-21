@@ -134,6 +134,7 @@
     maxNumRedirects: 4,
     skipMessage: 'Skip ad',
     skipWaitingMessage: 'Skip ad in',
+    skipOverride: 3,
     textForClickUIOnMobile: 'Learn more',
     enableVpaid: true,
     vpaidSettings: {

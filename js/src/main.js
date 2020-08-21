@@ -152,21 +152,26 @@ import ICONS from './creatives/icons';
         NONLINEAR.parse.call(this, nonLinearAds);
         return;
       } else if (linear.length > 0) {
-        // check for skippable ads (Linear skipoffset)
-        const skipoffset = linear[0].getAttribute('skipoffset');
-        // if we have a wrapper we ignore skipoffset in case it is present
-        if (!this.isWrapper && this.params.skipMessage !== '' && skipoffset !== null && skipoffset !== '' &&
-          FW.isValidOffset(skipoffset)) {
-          if (DEBUG) {
-            FW.log('skippable ad detected with offset ' + skipoffset);
-          }
+        if (this.params.skipOverride) {
           this.isSkippableAd = true;
-          this.skipoffset = skipoffset;
-          // we  do not display skippable ads when on is iOS < 10
-          if (ENV.isIos[0] && ENV.isIos[1] < 10) {
-            PING.error.call(this, 200);
-            VASTERRORS.process.call(this, 200);
-            return;
+          this.skipoffset = this.params.skipOverride;
+        } else {
+          // check for skippable ads (Linear skipoffset)
+          const skipoffset = linear[0].getAttribute('skipoffset');
+          // if we have a wrapper we ignore skipoffset in case it is present
+          if (!this.isWrapper && this.params.skipMessage !== '' && skipoffset !== null && skipoffset !== '' &&
+            FW.isValidOffset(skipoffset)) {
+            if (DEBUG) {
+              FW.log('skippable ad detected with offset ' + skipoffset);
+            }
+            this.isSkippableAd = true;
+            this.skipoffset = skipoffset;
+            // we  do not display skippable ads when on is iOS < 10
+            if (ENV.isIos[0] && ENV.isIos[1] < 10) {
+              PING.error.call(this, 200);
+              VASTERRORS.process.call(this, 200);
+              return;
+            }
           }
         }
 
