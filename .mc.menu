@@ -1,0 +1,11 @@
+Create App Symlinks
+	ln -s ../../../js/dist/rmp-vast.js app/js/dist/rmp-vast.js
+	ln -s ../../../js/dist/rmp-vast.min.js app/js/dist/rmp-vast.min.js
+	ln -s ../../css/rmp-vast.css app/css/rmp-vast.css
+	ln -s ../../css/rmp-vast.min.css app/css/rmp-vast.min.css
+
+Remove App Symlinks
+	rm app/js/dist/rmp-vast.js
+	rm app/js/dist/rmp-vast.min.js
+	rm app/css/rmp-vast.css
+	rm app/css/rmp-vast.min.css
