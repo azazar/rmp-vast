@@ -116,8 +116,9 @@ The HTML5 video tag used for content must use the src property on the HTML5 vide
 - Init rmp-vast with JavaScript:
 ```javascript
 var adTag = [
-  'https://www.radiantmediaplayer.com/vast/tags/inline-linear-1.xml',
-  'https://example.org/fallback.xml'
+  'https://www.radiantmediaplayer.com/vast/tags/inline-linear-1.xml', // ad tag URL
+  'https://example.org/fallback1.xml', // fallback URL #1
+  'https://example.org/fallback2.xml', // fallback URL #2
 ];
 var id = 'rmpPlayer';
 var params = {
