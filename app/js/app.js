@@ -136,6 +136,7 @@
     skipWaitingMessage: 'Skip ad in',
     skipOverride: 3,
     textForClickUIOnMobile: 'Learn more',
+    textForClickLink: 'Click me!',
     enableVpaid: true,
     vpaidSettings: {
       width: playerWidth,

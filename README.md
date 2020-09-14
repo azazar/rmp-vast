@@ -175,6 +175,10 @@ Once rmp-vast library is loaded on your page you can create a new rmp-vast insta
 
 `params.textForClickUIOnMobile: String` on mobile devices the click-through URL for a linear ad is provided in a box located at the top right corner of the player. This setting set the text for this box. Default: 'Learn more'.
 
+`params.textForClickLink: String` on all devices the click-through URL for a linear ad is provided in a box located at the top right corner of the player. This setting set the text for this box. Default: empty, no link displayed.
+
+`params.styleForClickLink: String` css style on all devices the click-through URL for a linear ad is provided in a box located at the top right corner of the player. This setting set the text for this box. Default: empty.
+
 `params.outstream: Boolean` Enables outstream ad mode. Default: false.
 
 `params.enableVpaid: Boolean` Enables VPAID support or not. Default: true.

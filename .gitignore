@@ -30,5 +30,6 @@ nbproject/
 
 # compiled stuff
 js/src/module.js
+js/dist/*
 app/js/dist/rmp-vast.*
 app/css/rmp-vast.*

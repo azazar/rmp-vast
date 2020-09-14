@@ -114,12 +114,26 @@ const _appendClickUIOnMobile = function () {
   // we create a <a> tag rather than using window.open 
   // because it works better in standalone mode and WebView
   this.clickUIOnMobile = document.createElement('a');
+  this.clickLink = this.clickUIOnMobile;
   this.clickUIOnMobile.className = 'rmp-ad-click-ui-mobile';
-  this.clickUIOnMobile.textContent = this.params.textForClickUIOnMobile;
+  this.clickUIOnMobile.textContent = this.params.textForClickLink || this.params.textForClickUIOnMobile;
+  this.clickLink.setAttribute('style', this.params.styleForClickLink);
   this.clickUIOnMobile.addEventListener('touchend', this.onClickThrough);
   this.clickUIOnMobile.href = this.clickThroughUrl;
   this.clickUIOnMobile.target = '_blank';
   this.adContainer.appendChild(this.clickUIOnMobile);
+};
+
+const _appendClickLink = function () {
+  this.clickLink = document.createElement('a');
+  this.clickLink.className = 'rmp-ad-click-ui';
+  this.clickLink.textContent = this.params.textForClickLink;
+  this.clickLink.setAttribute('style', this.params.styleForClickLink);
+  this.clickLink.addEventListener('touchend', this.onClickThrough);
+  this.clickLink.addEventListener('click', this.onClickThrough);
+  this.clickLink.href = this.clickThroughUrl;
+  this.clickLink.target = '_blank';
+  this.adContainer.appendChild(this.clickLink);
 };
 
 const _onContextMenu = function (event) {
@@ -168,7 +182,10 @@ LINEAR.update = function (url, type) {
     if (ENV.isMobile) {
       _appendClickUIOnMobile.call(this);
     } else {
-      this.vastPlayer.addEventListener('click', this.onClickThrough);
+      if (this.params.textForClickLink && this.params.textForClickLink !== '') {
+        _appendClickLink.call(this);
+      }
+      (this.clickLink || this.vastPlayer).addEventListener('click', this.onClickThrough);
     }
   }
 
