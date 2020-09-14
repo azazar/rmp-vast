@@ -91,6 +91,7 @@ DEFAULT.loadAdsVariables = function () {
   this.clickUIOnMobile = null;
   this.textForClickLink = '';
   this.styleForClickLink = '';
+  this.clickLinkDelay = 0;
   this.customPlaybackCurrentTime = 0;
   this.antiSeekLogicInterval = null;
   this.creativeLoadTimeoutCallback = null;

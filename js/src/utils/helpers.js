@@ -17,6 +17,7 @@ HELPERS.filterParams = function (inputParams) {
     skipOverride: 0,
     textForClickUIOnMobile: 'Learn more',
     textForClickLink: '',
+    clickLinkDelay: 0,
     styleForClickLink: '',
     enableVpaid: true,
     outstream: false,

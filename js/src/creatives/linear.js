@@ -187,6 +187,15 @@ LINEAR.update = function (url, type) {
       }
       (this.clickLink || this.vastPlayer).addEventListener('click', this.onClickThrough);
     }
+    
+    if (this.clickLink && this.params.clickLinkDelay > 0) {
+      let link = this.clickLink;
+      let _display = link.style.display;
+      link.style.display='none';
+      window.setTimeout(function() {
+        link.style.display = _display;
+      }, this.params.clickLinkDelay * 1000);
+    }
   }
 
   // skippable - only where vast player is different from 
