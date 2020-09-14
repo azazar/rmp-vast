@@ -26,13 +26,33 @@
   <script>
     var id = 'rmpPlayer';
     var container = document.getElementById(id);
-    var video = container.getElementsByClassName('rmp-video')[0];
-    var ADTAG2 = 'https://www.radiantmediaplayer.com/vast/tags/inline-linear-skippable-per-cent.xml';
-    //var ADTAG2 = 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=';
+    var ADTAG = 'https://www.radiantmediaplayer.com/vast/tags/inline-linear-skippable-per-cent.xml';
+    var playVastOnPageLoad = false;
     var params = {
-      ajaxWithCredentials: false
+      textForClickLink: 'Link text',
+      styleForClickLink: 'color: #0f0',
+      clickLinkDelay: 5,
+      skipOverride: 5,
+      enableVpaid: true,
     };
     var rmpVast = new RmpVast(id, params);
-    rmpVast.loadAds(ADTAG2);
+    
+    if (playVastOnPageLoad) {
+      rmpVast.loadAds(ADTAG);
+    }
+    else {
+      rmpVast.contentPlayer.addEventListener('click', function(event) {
+        rmpVast.loadAds(ADTAG);
+        event.preventDefault();
+      });
+    }
+    
+    container.addEventListener('adimpression', function() {
+      console.log('ad impression. tag url: ' + rmpVast.adTagUrl);
+    });
+
+    container.addEventListener('adclick', function() {
+      console.log('ad click. tag url: ' + rmpVast.adTagUrl);
+    });
   </script>
 </body>
