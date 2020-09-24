@@ -171,7 +171,7 @@ Once rmp-vast library is loaded on your page you can create a new rmp-vast insta
 
 `params.skipWaitingMessage: String` the skip message to show on player when a skippable ad is detected and the ad is in a state where it cannot be skipped. Default: 'Skip ad in'. This will be completed by the number of seconds remaining before the ad state changes to a state where it can be skipped.
 
-`params.skipOverride: Number`: Overrides skip time for liner ads, enabling when it's not configured. Zero disables override.
+`params.skipOverride: Number`: Overrides skip time for liner ads, enabling when it's not configured. Zero disables override. Minus one disables skipping.
 
 `params.displayClickLink: Boolean`: Endorce display AdTitle or `params.textForClickLink`.
 

@@ -155,6 +155,9 @@ import ICONS from './creatives/icons';
         if (this.params.skipOverride) {
           this.isSkippableAd = true;
           this.skipoffset = this.params.skipOverride;
+        } else if (this.params.skipOverride === -1) {
+          this.isSkippableAd = false;
+          this.skipoffset = Number.MAX_VALUE;
         } else {
           // check for skippable ads (Linear skipoffset)
           const skipoffset = linear[0].getAttribute('skipoffset');
