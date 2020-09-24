@@ -33,3 +33,5 @@ js/src/module.js
 js/dist/*
 app/js/dist/rmp-vast.*
 app/css/rmp-vast.*
+!/js/dist/rmp-vast.js
+!/js/dist/rmp-vast.min.js
