@@ -1284,12 +1284,26 @@ const _appendClickUIOnMobile = function _appendClickUIOnMobile() {
   // we create a <a> tag rather than using window.open 
   // because it works better in standalone mode and WebView
   this.clickUIOnMobile = document.createElement('a');
+  this.clickLink = this.clickUIOnMobile;
   this.clickUIOnMobile.className = 'rmp-ad-click-ui-mobile';
-  this.clickUIOnMobile.textContent = this.params.textForClickUIOnMobile;
+  this.clickUIOnMobile.textContent = this.params.textForClickLink || this.params.textForClickUIOnMobile;
+  this.clickLink.setAttribute('style', this.params.styleForClickLink);
   this.clickUIOnMobile.addEventListener('touchend', this.onClickThrough);
   this.clickUIOnMobile.href = this.clickThroughUrl;
   this.clickUIOnMobile.target = '_blank';
   this.adContainer.appendChild(this.clickUIOnMobile);
+};
+
+const _appendClickLink = function _appendClickLink() {
+  this.clickLink = document.createElement('a');
+  this.clickLink.className = 'rmp-ad-click-ui';
+  this.clickLink.textContent = this.params.textForClickLink;
+  this.clickLink.setAttribute('style', this.params.styleForClickLink);
+  this.clickLink.addEventListener('touchend', this.onClickThrough);
+  this.clickLink.addEventListener('click', this.onClickThrough);
+  this.clickLink.href = this.clickThroughUrl;
+  this.clickLink.target = '_blank';
+  this.adContainer.appendChild(this.clickLink);
 };
 
 const _onContextMenu = function _onContextMenu(event) {
@@ -1337,7 +1351,20 @@ LINEAR.update = function (url, type) {
     if (_env.default.isMobile) {
       _appendClickUIOnMobile.call(this);
     } else {
-      this.vastPlayer.addEventListener('click', this.onClickThrough);
+      if (this.params.textForClickLink && this.params.textForClickLink !== '') {
+        _appendClickLink.call(this);
+      }
+
+      (this.clickLink || this.vastPlayer).addEventListener('click', this.onClickThrough);
+    }
+
+    if (this.clickLink && this.params.clickLinkDelay > 0) {
+      let link = this.clickLink;
+      let _display = link.style.display;
+      link.style.display = 'none';
+      window.setTimeout(function () {
+        link.style.display = _display;
+      }, this.params.clickLinkDelay * 1000);
     }
   } // skippable - only where vast player is different from 
   // content player
@@ -2795,7 +2822,9 @@ FW.isValidOffset = function (offset) {
 FW.convertOffsetToSeconds = function (offset, duration) {
   let seconds = 0;
 
-  if (skipPattern1.test(offset)) {
+  if (typeof offset === 'number') {
+    seconds = offset;
+  } else if (skipPattern1.test(offset)) {
     // remove .mmm
     let splitNoMS = offset.split('.');
     splitNoMS = splitNoMS[0];
@@ -2858,6 +2887,10 @@ exports.default = _default;
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 require("core-js/modules/web.dom-collections.iterator");
+
+var _splice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/splice"));
+
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/array/is-array"));
 
 var _bind = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/bind"));
 
@@ -3071,23 +3104,28 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
 
         return;
       } else if (linear.length > 0) {
-        // check for skippable ads (Linear skipoffset)
-        const skipoffset = linear[0].getAttribute('skipoffset'); // if we have a wrapper we ignore skipoffset in case it is present
-
-        if (!this.isWrapper && this.params.skipMessage !== '' && skipoffset !== null && skipoffset !== '' && _fw.default.isValidOffset(skipoffset)) {
-          if (DEBUG) {
-            _fw.default.log('skippable ad detected with offset ' + skipoffset);
-          }
-
+        if (this.params.skipOverride) {
           this.isSkippableAd = true;
-          this.skipoffset = skipoffset; // we  do not display skippable ads when on is iOS < 10
+          this.skipoffset = this.params.skipOverride;
+        } else {
+          // check for skippable ads (Linear skipoffset)
+          const skipoffset = linear[0].getAttribute('skipoffset'); // if we have a wrapper we ignore skipoffset in case it is present
 
-          if (_env.default.isIos[0] && _env.default.isIos[1] < 10) {
-            _ping.default.error.call(this, 200);
+          if (!this.isWrapper && this.params.skipMessage !== '' && skipoffset !== null && skipoffset !== '' && _fw.default.isValidOffset(skipoffset)) {
+            if (DEBUG) {
+              _fw.default.log('skippable ad detected with offset ' + skipoffset);
+            }
 
-            _vastErrors.default.process.call(this, 200);
+            this.isSkippableAd = true;
+            this.skipoffset = skipoffset; // we  do not display skippable ads when on is iOS < 10
 
-            return;
+            if (_env.default.isIos[0] && _env.default.isIos[1] < 10) {
+              _ping.default.error.call(this, 200);
+
+              _vastErrors.default.process.call(this, 200);
+
+              return;
+            }
           }
         } // TrackingEvents
 
@@ -3388,12 +3426,28 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
     _parseCreatives.call(this, creative);
   };
 
-  const _onXmlAvailable = function _onXmlAvailable(xml) {
+  const _loadError = function _loadError(errorCode, _makeAjaxRequest) {
+    if ((0, _isArray.default)(this.fallbackAdTagUrls) && this.fallbackAdTagUrls.length > 0) {
+      if (DEBUG) {
+        _fw.default.log('switching to fallback url');
+      }
+
+      _makeAjaxRequest.call(this, this.fallbackAdTagUrls);
+    } else {
+      if (DEBUG) {
+        _fw.default.log('failed');
+      }
+
+      _vastErrors.default.process.call(this, errorCode);
+    }
+  };
+
+  const _onXmlAvailable = function _onXmlAvailable(xml, _makeAjaxRequest) {
     // if VMAP we abort
     const vmap = xml.getElementsByTagName('vmap:VMAP');
 
     if (vmap.length > 0) {
-      _vastErrors.default.process.call(this, 200);
+      _loadError.call(this, 200, _makeAjaxRequest);
 
       return;
     } // check for VAST node
@@ -3405,7 +3459,7 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
       // in case this is a wrapper we need to ping for errors on originating tags
       _ping.default.error.call(this, 100);
 
-      _vastErrors.default.process.call(this, 100);
+      _loadError.call(this, 100, _makeAjaxRequest);
 
       return;
     }
@@ -3440,7 +3494,7 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
       // in case this is a wrapper we need to ping for errors on originating tags
       _ping.default.error.call(this, 102);
 
-      _vastErrors.default.process.call(this, 102);
+      _loadError.call(this, 102, _makeAjaxRequest);
 
       return;
     } // if empty VAST return
@@ -3451,7 +3505,7 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
     if (ad.length === 0) {
       _ping.default.error.call(this, 303);
 
-      _vastErrors.default.process.call(this, 303);
+      _loadError.call(this, 303, _makeAjaxRequest);
 
       return;
     }
@@ -3462,6 +3516,13 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
   const _makeAjaxRequest = function _makeAjaxRequest(vastUrl) {
     // we check for required VAST URL and API here
     // as we need to have this.currentContentSrc available for iOS
+    if ((0, _isArray.default)(vastUrl)) {
+      this.fallbackAdTagUrls = (0, _splice.default)(vastUrl).call(vastUrl, 1);
+      vastUrl = vastUrl[0];
+    } else {
+      this.fallbackAdTagUrls = null;
+    }
+
     if (typeof vastUrl !== 'string' || vastUrl === '') {
       _vastErrors.default.process.call(this, 1001);
 
@@ -3509,7 +3570,7 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
 
         _ping.default.error.call(this, 100);
 
-        _vastErrors.default.process.call(this, 100);
+        _loadError.call(this, 100, _makeAjaxRequest);
 
         return;
       }
@@ -3521,7 +3582,7 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
 
       _ping.default.error.call(this, 1000);
 
-      _vastErrors.default.process.call(this, 1000);
+      _loadError.call(this, 1000, _makeAjaxRequest);
     });
   };
 
@@ -3578,7 +3639,7 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
 
 /* module:export */
 
-},{"./api/api":2,"./creatives/companion":3,"./creatives/icons":4,"./creatives/linear":5,"./creatives/non-linear":6,"./fw/env":8,"./fw/fw":9,"./players/content-player":11,"./tracking/ping":14,"./tracking/tracking-events":15,"./utils/default":16,"./utils/helpers":17,"./utils/vast-errors":18,"@babel/runtime-corejs3/core-js-stable/instance/bind":20,"@babel/runtime-corejs3/core-js-stable/instance/sort":24,"@babel/runtime-corejs3/core-js-stable/object/keys":29,"@babel/runtime-corejs3/core-js-stable/parse-int":31,"@babel/runtime-corejs3/helpers/interopRequireDefault":35,"core-js/modules/web.dom-collections.iterator":272}],11:[function(require,module,exports){
+},{"./api/api":2,"./creatives/companion":3,"./creatives/icons":4,"./creatives/linear":5,"./creatives/non-linear":6,"./fw/env":8,"./fw/fw":9,"./players/content-player":11,"./tracking/ping":14,"./tracking/tracking-events":15,"./utils/default":16,"./utils/helpers":17,"./utils/vast-errors":18,"@babel/runtime-corejs3/core-js-stable/array/is-array":19,"@babel/runtime-corejs3/core-js-stable/instance/bind":20,"@babel/runtime-corejs3/core-js-stable/instance/sort":24,"@babel/runtime-corejs3/core-js-stable/instance/splice":25,"@babel/runtime-corejs3/core-js-stable/object/keys":29,"@babel/runtime-corejs3/core-js-stable/parse-int":31,"@babel/runtime-corejs3/helpers/interopRequireDefault":35,"core-js/modules/web.dom-collections.iterator":272}],11:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
@@ -5591,6 +5652,9 @@ DEFAULT.loadAdsVariables = function () {
   this.redirectsFollowed = 0;
   this.icons = [];
   this.clickUIOnMobile = null;
+  this.textForClickLink = '';
+  this.styleForClickLink = '';
+  this.clickLinkDelay = 0;
   this.customPlaybackCurrentTime = 0;
   this.antiSeekLogicInterval = null;
   this.creativeLoadTimeoutCallback = null; // skip
@@ -5741,7 +5805,11 @@ HELPERS.filterParams = function (inputParams) {
     pauseOnClick: true,
     skipMessage: 'Skip ad',
     skipWaitingMessage: 'Skip ad in',
+    skipOverride: 0,
     textForClickUIOnMobile: 'Learn more',
+    textForClickLink: '',
+    clickLinkDelay: 0,
+    styleForClickLink: '',
     enableVpaid: true,
     outstream: false,
     vpaidSettings: {
