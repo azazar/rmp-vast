@@ -42,9 +42,13 @@
       rmpVast.loadAds(ADTAG);
     }
     else {
+      var play = true;
       rmpVast.contentPlayer.addEventListener('play', function(event) {
-        rmpVast.loadAds(ADTAG);
-        event.preventDefault();
+        if (play) {
+          rmpVast.loadAds(ADTAG);
+          event.preventDefault();
+          play = false;
+        }
       });
     }
     
