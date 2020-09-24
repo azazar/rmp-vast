@@ -173,7 +173,7 @@ Once rmp-vast library is loaded on your page you can create a new rmp-vast insta
 
 `params.skipOverride: Number`: Overrides skip time for liner ads, enabling when it's not configured. Zero disables override. Minus one disables skipping.
 
-`params.displayClickLink: Boolean`: Endorce display AdTitle or `params.textForClickLink`.
+`params.displayClickLink: Boolean`: Enforce display AdTitle or `params.textForClickLink`.
 
 `params.textForClickUIOnMobile: String` on mobile devices the click-through URL for a linear ad is provided in a box located at the top right corner of the player. This setting set the text for this box. Default: 'Learn more'.
 
