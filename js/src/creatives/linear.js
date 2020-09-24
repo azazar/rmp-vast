@@ -116,7 +116,7 @@ const _appendClickUIOnMobile = function () {
   this.clickUIOnMobile = document.createElement('a');
   this.clickLink = this.clickUIOnMobile;
   this.clickUIOnMobile.className = 'rmp-ad-click-ui-mobile';
-  this.clickUIOnMobile.textContent = this.params.textForClickLink || this.params.textForClickUIOnMobile;
+  this.clickUIOnMobile.textContent = this.getAdTitle() || this.params.textForClickLink || this.params.textForClickUIOnMobile;
   this.clickLink.setAttribute('style', this.params.styleForClickLink);
   this.clickUIOnMobile.addEventListener('touchend', this.onClickThrough);
   this.clickUIOnMobile.href = this.clickThroughUrl;
@@ -127,7 +127,7 @@ const _appendClickUIOnMobile = function () {
 const _appendClickLink = function () {
   this.clickLink = document.createElement('a');
   this.clickLink.className = 'rmp-ad-click-ui';
-  this.clickLink.textContent = this.params.textForClickLink;
+  this.clickLink.textContent = this.getAdTitle() || this.params.textForClickLink;
   this.clickLink.setAttribute('style', this.params.styleForClickLink);
   this.clickLink.addEventListener('touchend', this.onClickThrough);
   this.clickLink.addEventListener('click', this.onClickThrough);
@@ -182,7 +182,7 @@ LINEAR.update = function (url, type) {
     if (ENV.isMobile) {
       _appendClickUIOnMobile.call(this);
     } else {
-      if (this.params.textForClickLink && this.params.textForClickLink !== '') {
+      if (this.params.displayClickLink) {
         _appendClickLink.call(this);
       }
       (this.clickLink || this.vastPlayer).addEventListener('click', this.onClickThrough);

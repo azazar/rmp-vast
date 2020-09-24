@@ -1,9 +1,3 @@
-/**
- * @license Copyright (c) 2017-2020 Radiant Media Player | https://www.radiantmediaplayer.com
- * rmp-vast 2.5.0
- * GitHub: https://github.com/azazar/rmp-vast
- * MIT License: https://github.com/azazar/rmp-vast/blob/master/LICENSE
- */
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
@@ -1286,7 +1280,7 @@ const _appendClickUIOnMobile = function _appendClickUIOnMobile() {
   this.clickUIOnMobile = document.createElement('a');
   this.clickLink = this.clickUIOnMobile;
   this.clickUIOnMobile.className = 'rmp-ad-click-ui-mobile';
-  this.clickUIOnMobile.textContent = this.params.textForClickLink || this.params.textForClickUIOnMobile;
+  this.clickUIOnMobile.textContent = this.getAdTitle() || this.params.textForClickLink || this.params.textForClickUIOnMobile;
   this.clickLink.setAttribute('style', this.params.styleForClickLink);
   this.clickUIOnMobile.addEventListener('touchend', this.onClickThrough);
   this.clickUIOnMobile.href = this.clickThroughUrl;
@@ -1297,7 +1291,7 @@ const _appendClickUIOnMobile = function _appendClickUIOnMobile() {
 const _appendClickLink = function _appendClickLink() {
   this.clickLink = document.createElement('a');
   this.clickLink.className = 'rmp-ad-click-ui';
-  this.clickLink.textContent = this.params.textForClickLink;
+  this.clickLink.textContent = this.getAdTitle() || this.params.textForClickLink;
   this.clickLink.setAttribute('style', this.params.styleForClickLink);
   this.clickLink.addEventListener('touchend', this.onClickThrough);
   this.clickLink.addEventListener('click', this.onClickThrough);
@@ -1351,7 +1345,7 @@ LINEAR.update = function (url, type) {
     if (_env.default.isMobile) {
       _appendClickUIOnMobile.call(this);
     } else {
-      if (this.params.textForClickLink && this.params.textForClickLink !== '') {
+      if (this.params.displayClickLink) {
         _appendClickLink.call(this);
       }
 
@@ -5806,6 +5800,7 @@ HELPERS.filterParams = function (inputParams) {
     skipMessage: 'Skip ad',
     skipWaitingMessage: 'Skip ad in',
     skipOverride: 0,
+    displayClickLink: false,
     textForClickUIOnMobile: 'Learn more',
     textForClickLink: '',
     clickLinkDelay: 0,
