@@ -65,6 +65,11 @@ const _unwireVastPlayerEvents = function () {
     if (this.clickUIOnMobile && this.onClickThrough !== null) {
       this.clickUIOnMobile.removeEventListener('touchend', this.onClickThrough);
     }
+    // click UI on mobile
+    if (this.clickLink && this.onClickThrough !== null) {
+      this.clickLink.removeEventListener('touchend', this.onClickThrough);
+      this.clickLink.removeEventListener('click', this.onClickThrough);
+    }
   }
   if (this.contentPlayer) {
     this.contentPlayer.removeEventListener('error', this.onPlaybackError);
