@@ -152,12 +152,12 @@ import ICONS from './creatives/icons';
         NONLINEAR.parse.call(this, nonLinearAds);
         return;
       } else if (linear.length > 0) {
-        if (this.params.skipOverride) {
-          this.isSkippableAd = true;
-          this.skipoffset = this.params.skipOverride;
-        } else if (this.params.skipOverride === -1) {
+        if (this.params.skipOverride === -1) {
           this.isSkippableAd = false;
           this.skipoffset = Number.MAX_VALUE;
+        } else if (this.params.skipOverride) {
+          this.isSkippableAd = true;
+          this.skipoffset = this.params.skipOverride;
         } else {
           // check for skippable ads (Linear skipoffset)
           const skipoffset = linear[0].getAttribute('skipoffset');
