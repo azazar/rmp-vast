@@ -1235,6 +1235,8 @@ const _onClickThrough = function _onClickThrough(event) {
 
   if (!_env.default.isMobile) {
     _fw.default.openWindow(this.clickThroughUrl);
+
+    event.preventDefault();
   }
 
   if (this.params.pauseOnClick) {
