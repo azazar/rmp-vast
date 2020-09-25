@@ -3895,6 +3895,10 @@ const _destroyVastPlayer = function _destroyVastPlayer() {
     _fw.default.removeElement(this.clickUIOnMobile);
   }
 
+  if (this.clickLink) {
+    _fw.default.removeElement(this.clickLink);
+  }
+
   if (this.isSkippableAd) {
     _fw.default.removeElement(this.skipButton);
   } // hide rmp-ad-container

@@ -93,6 +93,9 @@ const _destroyVastPlayer = function () {
   if (this.clickUIOnMobile) {
     FW.removeElement(this.clickUIOnMobile);
   }
+  if (this.clickLink) {
+    FW.removeElement(this.clickLink);
+  }
   if (this.isSkippableAd) {
     FW.removeElement(this.skipButton);
   }
