@@ -73,8 +73,9 @@ const _onClickThrough = function (event) {
     FW.log('onClickThrough');
   }
   if (!ENV.isMobile) {
-    FW.openWindow(this.clickThroughUrl);
-    event.preventDefault();
+    if (FW.openWindow(this.clickThroughUrl)) {
+      event.preventDefault();
+    }
   }
   if (this.params.pauseOnClick) {
     this.pause();

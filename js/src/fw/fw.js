@@ -383,9 +383,10 @@ FW.openWindow = function (link) {
     // I would like to use named window here to have better performance like 
     // window.open(link, 'rmpVastAdPageArea'); but focus is not set on updated window with such approach
     // in MS Edge and FF - so _blank it is
-    window.open(link, '_blank');
+    return window.open(link, '_blank') !== null;
   } catch (e) {
     FW.trace(e);
+    return false;
   }
 };
 
