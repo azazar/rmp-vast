@@ -5844,7 +5844,7 @@ HELPERS.filterParams = function (inputParams) {
       const prop = keys[i];
 
       if (typeof inputParams[prop] === typeof this.params[prop]) {
-        if (_fw.default.isNumber(inputParams[prop]) && inputParams[prop] > 0 || typeof inputParams[prop] !== 'number') {
+        if (_fw.default.isNumber(inputParams[prop]) || typeof inputParams[prop] !== 'number') {
           if (prop === 'vpaidSettings') {
             if (_fw.default.isNumber(inputParams.vpaidSettings.width) && inputParams.vpaidSettings.width > 0) {
               this.params.vpaidSettings.width = inputParams.vpaidSettings.width;

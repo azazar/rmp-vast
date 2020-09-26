@@ -35,7 +35,7 @@ HELPERS.filterParams = function (inputParams) {
     for (let i = 0, len = keys.length; i < len; i++) {
       const prop = keys[i];
       if (typeof inputParams[prop] === typeof this.params[prop]) {
-        if ((FW.isNumber(inputParams[prop]) && inputParams[prop] > 0) || typeof inputParams[prop] !== 'number') {
+        if ((FW.isNumber(inputParams[prop])) || typeof inputParams[prop] !== 'number') {
           if (prop === 'vpaidSettings') {
             if (FW.isNumber(inputParams.vpaidSettings.width) && inputParams.vpaidSettings.width > 0) {
               this.params.vpaidSettings.width = inputParams.vpaidSettings.width;
