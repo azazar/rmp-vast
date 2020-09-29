@@ -7,30 +7,11 @@
   <meta name="viewport"
     content="width=device-width,minimum-scale=1,initial-scale=1">
   <title>RmpVast - Example</title>
-  <link rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/app.css">
-  <script src="../js/dist/rmp-vast.js"></script>
 </head>
 
 <body>
-  <div class="rmp-container" id="rmpPlayer">
-    <div class="rmp-content">
-      <video class="rmp-video" src="https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4" playsinline controls></video>
-    </div>
+  <div id="rmpPlayer" style="min-height: 30em">
+    <video class="rmp-video" src="https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4" playsinline controls></video>
   </div>
-  <script>
-    RmpVast.attach('rmpPlayer', [
-      'data:text/xml,',
-      'https://www.radiantmediaplayer.com/vast/tags/empty.xml',
-      'https://www.radiantmediaplayer.com/vast/tags/inline-linear-skippable-per-cent.xml',
-    ], {
-      displayClickLink: true,
-      styleForClickLink: 'color: #0f0',
-      clickLinkDelay: 5,
-      skipOverride: 1,
-      enableVpaid: true,
-      playVastOnPageLoad: false,
-    });
-  </script>
+  <script src="js/adman-vast.js"></script>
 </body>
