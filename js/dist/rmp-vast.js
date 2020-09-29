@@ -1234,9 +1234,9 @@ const _onClickThrough = function _onClickThrough(event) {
   }
 
   if (!_env.default.isMobile) {
-    _fw.default.openWindow(this.clickThroughUrl);
-
-    event.preventDefault();
+    if (_fw.default.openWindow(this.clickThroughUrl)) {
+      event.preventDefault();
+    }
   }
 
   if (this.params.pauseOnClick) {
@@ -2873,9 +2873,10 @@ FW.openWindow = function (link) {
     // I would like to use named window here to have better performance like 
     // window.open(link, 'rmpVastAdPageArea'); but focus is not set on updated window with such approach
     // in MS Edge and FF - so _blank it is
-    window.open(link, '_blank');
+    return window.open(link, '_blank') !== null;
   } catch (e) {
     FW.trace(e);
+    return false;
   }
 };
 
@@ -3013,6 +3014,41 @@ var _icons = _interopRequireDefault(require("./creatives/icons"));
 
       _fw.default.log(filteredEnv);
     }
+  };
+
+  window.RmpVast.attach = function (id, adTags, params) {
+    let cssId = 'rmp_vast_css_link';
+
+    if (!document.getElementById(cssId)) {
+      let link = document.createElement('link');
+      link.setAttribute('id', cssId);
+      link.setAttribute('rel', 'stylesheet');
+      link.setAttribute('href', 'https://gitcdn.link/repo/azazar/rmp-vast/adman/css/rmp-vast.min.css');
+      document.head.appendChild(link);
+    }
+
+    let container = document.getElementById(id);
+    let rmpVast = new RmpVast(id, params);
+
+    if (params.playVastOnPageLoad) {
+      rmpVast.loadAds(adTags);
+    } else {
+      let play = true;
+      rmpVast.contentPlayer.addEventListener('play', function (event) {
+        if (play) {
+          rmpVast.loadAds(adTags);
+          event.preventDefault();
+          play = false;
+        }
+      });
+    }
+
+    container.addEventListener('adimpression', function () {
+      _fw.default.log('Ad Impression Event Stub: ' + rmpVast.adTagUrl);
+    });
+    container.addEventListener('adclick', function () {
+      _fw.default.log('Ad Click Event Stub: ' + rmpVast.adTagUrl);
+    });
   }; // enrich RmpVast prototype with API methods
 
 

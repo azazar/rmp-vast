@@ -10,7 +10,6 @@
   <link rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/app.css">
-  <link rel="stylesheet" href="../css/rmp-vast.css">
   <script src="../js/dist/rmp-vast.js"></script>
 </head>
 
@@ -21,43 +20,17 @@
     </div>
   </div>
   <script>
-    var id = 'rmpPlayer';
-    var container = document.getElementById(id);
-    var ADTAG = [
+    RmpVast.attach('rmpPlayer', [
       'data:text/xml,',
       'https://www.radiantmediaplayer.com/vast/tags/empty.xml',
       'https://www.radiantmediaplayer.com/vast/tags/inline-linear-skippable-per-cent.xml',
-    ];
-    var playVastOnPageLoad = false;
-    var params = {
+    ], {
       displayClickLink: true,
       styleForClickLink: 'color: #0f0',
       clickLinkDelay: 5,
-      skipOverride: -1,
+      skipOverride: 1,
       enableVpaid: true,
-    };
-    var rmpVast = new RmpVast(id, params);
-    
-    if (playVastOnPageLoad) {
-      rmpVast.loadAds(ADTAG);
-    }
-    else {
-      var play = true;
-      rmpVast.contentPlayer.addEventListener('play', function(event) {
-        if (play) {
-          rmpVast.loadAds(ADTAG);
-          event.preventDefault();
-          play = false;
-        }
-      });
-    }
-    
-    container.addEventListener('adimpression', function() {
-      console.log('ad impression. tag url: ' + rmpVast.adTagUrl);
-    });
-
-    container.addEventListener('adclick', function() {
-      console.log('ad click. tag url: ' + rmpVast.adTagUrl);
+      playVastOnPageLoad: false,
     });
   </script>
 </body>
