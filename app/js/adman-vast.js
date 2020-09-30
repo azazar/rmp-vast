@@ -19,14 +19,23 @@
   };
   
   var cssUrl = '../css/rmp-vast.min.css';
-  var jsUrl = '../js/dist/rmp-vast.js';
+  var jsUrl = '../js/dist/rmp-vast.min.js';
   
   //////////////
 
   var attachVast = function() {
     var container = document.getElementById(containerId);
     
+    if (container.clientWidth === 0 || container.clientHeight === 0) {
+      window.setTimeout(attachVast, 100);
+      return;
+    }
+    
+    container.style.minWidth = container.clientWidth + 'px';
+    container.style.minHeight = container.clientHeight + 'px';
+
     var child = container.children[0];
+    var video;
     
     var contentWrapper;
     
@@ -35,16 +44,16 @@
       child.parentNode.removeChild(child);
       contentWrapper.appendChild(child);
       container.appendChild(contentWrapper);
+      video = child;
     }
     else {
       contentWrapper = child;
+      video = contentWrapper.querySelector('VIDEO');
     }
-    
-    container.style.minWidth = container.clientWidth + 'px';
-    container.style.minHeight = container.clientHeight + 'px';
     
     container.classList.add('rmp-container');
     contentWrapper.classList.add('rmp-content');
+    video.classList.add('rmp-video');
 
     var rmpVast = new RmpVast(containerId, params);
 
